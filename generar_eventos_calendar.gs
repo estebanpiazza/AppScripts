@@ -14,7 +14,7 @@ function agregar_eventos() {
   var columna_url_evento = 10;
   var columna_id_evento = 11;
   var ultima_fila = sheet.getLastRow() - 1;
-  var id_calendario = ""; //id del calendar
+  var id_calendario = ""; //id evento calendar
 
   var range = sheet.getRange(fila_inicial, columna_inicial, ultima_fila, columna_id_evento);
   var datos = range.getValues().map(
@@ -40,10 +40,10 @@ function agregar_eventos() {
       fecha_fin.setMinutes(hora_fin.getMinutes());
       fecha_fin.setSeconds(hora_fin.getSeconds());
 
+      let color 
 
 
-
-      let info_adicional = `El nivel involucrado en el evento es ${dato.Nivel} y los cursos son ${dato.Curso}`;
+      let info_adicional = `El nivel involucrado en el evento es ${dato.Nivel} y el/los curso/s es/son ${dato.Curso}`;
     console.log("fecha inicio:" + fecha_inicio)
     console.log("fecha fin:" + fecha_fin)
       var evento = CalendarApp.getCalendarById(id_calendario).createEvent(
@@ -52,9 +52,22 @@ function agregar_eventos() {
         fecha_fin,
         {
           description: info_adicional,
-
         }
       )
+
+      if(dato.Nivel == "Inicial"){
+        evento.setColor(CalendarApp.EventColor.RED)
+      }else if( dato.Nivel == "Primaria"){
+        evento.setColor(CalendarApp.EventColor.GREEN)
+      }else if(dato.Nivel == "Medio"){
+        evento.setColor(CalendarApp.EventColor.BLUE)
+      }
+
+
+
+
+
+
 
       var evento_url = "https://calendar.google.com/r/eventedit/" + Utilities.base64Encode(evento.getId().split('@')[0] + " " + id_calendario).replace("==", '');
       sheet.getRange(fila_inicial + index, columna_url_evento).setValue(evento_url);
